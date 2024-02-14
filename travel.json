@@ -1,0 +1,46 @@
+{
+  "listTravel": [
+    {
+      "id": "1072896609036",
+      "name": "milano",
+      "image": "https://plus.unsplash.com/premium_photo-1674582745025-e476948839f5?q=80&w=4226&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "description": "È universalmente riconosciuto che un lettore che osserva il layout di una pagina viene distratto dal contenuto testuale se questo è leggibile. Lo scopo dell’utilizzo del Lorem Ipsum è che offre",
+      "price": "34",
+      "startDate": "2024-02-24",
+      "endDate": "2024-02-25",
+      "reviews": "4"
+    },
+    {
+      "id": "920369362939",
+      "name": "roma",
+      "image": "https://a.cdn-hotels.com/gdcs/production40/d811/5e89ad90-8f10-11e8-b6b0-0242ac110007.jpg?impolicy=fcrop&w=1600&h=1066&q=medium",
+      "description": "È universalmente riconosciuto che un lettore che osserva il layout di una pagina viene distratto dal contenuto.\n",
+      "price": "23",
+      "startDate": "2024-02-23",
+      "endDate": "2024-02-24",
+      "reviews": "5"
+    }
+  ],
+  "dataBooking": [
+    {
+      "id": 574739755364,
+      "travel": {
+        "id": "1072896609036",
+        "name": "milano",
+        "image": "https://media.istockphoto.com/id/493223692/it/foto/duomo-di-milano-italia.jpg?s=2048x2048&w=is&k=20&c=weHsqFQgHWe_3i2HR_CWOC7DPNLOoCQOMpdFyhwsmcY=",
+        "description": "È universalmente riconosciuto che un lettore che osserva il layout di una pagina viene distratto dal contenuto testuale se questo è leggibile. Lo scopo dell’utilizzo del Lorem Ipsum è che offre",
+        "price": "34",
+        "startDate": "2024-02-24",
+        "endDate": "2024-02-25",
+        "reviews": "5",
+        "payment": "Paypal"
+      },
+      "name": "Mario",
+      "surname": "Rossi",
+      "age": "23",
+      "phone": "123-123-1234",
+      "email": "exsample@gmail.com",
+      "gender": "Male"
+    }
+  ]
+}

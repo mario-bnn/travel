@@ -1,0 +1,14 @@
+$root-font-size: 16;
+
+@function rem($target, $context: $root-font-size) {
+  @return calc($target / $context) * 1rem;
+}
+
+@mixin font-size-line-weight($font-size, $line-height, $font-weight: null) {
+    font-size: rem($font-size);
+    line-height: rem($line-height);
+  
+    @if ($font-weight) {
+      font-weight: $font-weight;
+    }
+}

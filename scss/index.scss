@@ -1,0 +1,23 @@
+@import './mixins';
+
+/*************
+* GLOBAL STYLE
+**************/
+.formkit-outer {
+    margin-bottom: rem(40);
+    :deep(.formkit-input) {
+        width: 100%;
+    }
+
+    :deep(.description-travel) {
+        resize: none;
+    }
+}
+
+:deep(.formkit-messages) {
+    list-style: none;
+    padding: 0;
+    margin: rem(8) 0;
+    color: #dc3545;
+    font-weight: 500;
+}
