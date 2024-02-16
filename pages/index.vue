@@ -1,7 +1,5 @@
 <script setup lang="ts">
-  import { info } from 'sass';
-import type { LocationQueryValue } from 'vue-router';
-
+  import type { LocationQueryValue } from 'vue-router';
   const item = ref<Data[]>([]);
   const isEdit = ref<boolean>(false);
   const getId = ref<number | null>(null);
@@ -26,7 +24,7 @@ import type { LocationQueryValue } from 'vue-router';
   const pathImage = '../public/image.jpg';
 
   const getData = async (id?: number) => {
-    const res: DataTravel = await $fetch(`http://localhost:8000/listTravel${id ? '/'+ id : ''}${getParams.value ?'?name_like='+ getParams.value : ''}`);
+    const res: DataTravel = await $fetch(`http://localhost:8000/listTravel${getParams.value ?'?name_like='+ getParams.value : ''}`);
      item.value = res as unknown as Data[];
   }
 
