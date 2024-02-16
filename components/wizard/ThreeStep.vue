@@ -1,12 +1,11 @@
 
 <script setup lang="ts">
   defineProps<{
-      nextStep: (step: string, data?: string | []) => void
+      nextStep: (step: string, data?: DataThreeSteps) => void
       previusStep: () => void
   }>();
 
-  const typePayment = ref({payment: ''});
-
+ const typePayment = ref<DataThreeSteps>({payment: '', notes: ''});
 </script>
 
 <template>
@@ -19,7 +18,7 @@
         form-class="row content-form-travel"
         submitLabel="Next"
         validation-visibility="live"
-        @submit="nextStep('last', typePayment.payment)"
+        @submit="nextStep('last', typePayment)"
         :submit-attrs="{
             wrapperClass: 'col-12 content-button-submit',
             inputClass: 'btn btn-primary',
@@ -27,7 +26,7 @@
         }"
     >
     <FormKit
-      v-model="typePayment.payment"
+      v-model="(typePayment.payment as string)"
       type="radio"
       label="Select type of payment"
       outer-class="col-md-5"
@@ -35,9 +34,9 @@
       input-class="form-check-input input-radio"
       :options="['Credit transfer', 'Paypal', 'Revolut']"
     />
-    <div 
+    <div
       class="content-input-payment col-md-6 offset-md-1 row"
-      :class="{'show-payment': typePayment?.payment === 'Credit transfer'}"
+      :class="{'show-payment': typePayment.payment === 'Credit transfer'}"
     >
       <FormKit
         label-class="form-label"
@@ -49,7 +48,7 @@
         name="cardNumber"
         id="cardNumber"
         :min="1"
-        :validation="typePayment?.payment === 'Credit transfer' ? 'required' : ''"
+        :validation="typePayment.payment === 'Credit transfer' ? 'required' : ''"
       />
       <FormKit
         label-class="form-label"
@@ -60,7 +59,7 @@
         placeholder="Full name"
         name="fullName"
         id="fullVame"
-        :validation="typePayment?.payment === 'Credit transfer' ? 'required' : ''"
+        :validation="typePayment.payment === 'Credit transfer' ? 'required' : ''"
       />
       <FormKit
         label-class="form-label"
@@ -70,7 +69,7 @@
         value="01-01-1990"
         label="Expiry date"
         id="expiryDate"
-        :validation="typePayment?.payment === 'Credit transfer' ? 'required' : ''"
+        :validation="typePayment.payment === 'Credit transfer' ? 'required' : ''"
       />
       <FormKit
         label-class="form-label"
@@ -84,12 +83,29 @@
         name="cardNumber"
         id="cardNumber"
         :min="1"
-        :validation="typePayment?.payment === 'Credit transfer' ? 'required|length:3' : ''"
+        :validation="typePayment.payment === 'Credit transfer' ? 'required|length:3' : ''"
         :validation-messages="{
           length: 'Cannot be more than 3 characters',
+        }"
+      />
+    </div>
+    <FormKit
+      label-class="form-label"
+      type="textarea"
+      outer-class="col-md-6"
+      name="notes"
+      input-class="form-control description-travel"
+      label="Personal notes"
+      placeholder="Travel description"
+      validation="length:0,200"
+      validation-visibility="live"
+      :help="`${typePayment.notes ? typePayment.notes.length : 0} / 200`"
+      rows="6"
+      v-model="typePayment.notes"
+      :validation-messages="{
+          length: 'Instructions cannot be more than 200 characters.',
       }"
     />
-    </div>
       <WizardButtonSubmitForms 
         :valid="valid"
         :label="'Confirm'"

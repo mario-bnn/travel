@@ -1,16 +1,14 @@
 <script setup lang="ts">
-  import type { LocationQueryValue } from 'vue-router';
   import FirstStep from '../components/wizard/FirstStep.vue';
   import SecondStep from '../components/wizard/SecondStep.vue';
   import ThreeStep from '../components/wizard/ThreeStep.vue';
   const itemBooking = ref<Data[]>([]);
   const itemTravel = ref<Data[]>([]);
   const route = useRoute();
-  const getParams = ref<LocationQueryValue | LocationQueryValue[]>(route.query.name);
   const getInfobooking = ref<Data>()
   const getInfoForm = ref<DataInfoUser>();
   const stepForm = ref(0);
-  const dataPayment = ref<string>('');
+  const dataPayment = ref<Omit<Data, "description" | "name" | "id" | "image" | "startDate" | "endDate" | "reviews" | "price">>();
 
   const components = [
     FirstStep,
@@ -24,7 +22,7 @@
   }
 
   const getDataTavel = async () => {
-    const res: DataTravel = await $fetch(`http://localhost:8000/listTravel${getParams.value ? '?name_like='+ getParams.value : ''}`);
+    const res: DataTravel = await $fetch(`http://localhost:8000/listTravel${route.query.name ? '?name_like='+ route.query.name : ''}`);
     itemTravel.value = res as unknown as Data[];
   }
   
@@ -36,7 +34,7 @@
     stepForm.value = 0;
   }
 
-  const nextStep = (step: string, data?: DataInfoUser | Data | string) => {
+  const nextStep = (step: string, data?: DataInfoUser | Data | DataThreeSteps) => {
     if (data && step === 'first') {
       getInfobooking.value = data as Data;
     }
@@ -46,7 +44,7 @@
     }
 
     if (step === 'last') {
-      dataPayment.value = data as string;
+      dataPayment.value = data as DataThreeSteps;
       submitFormBooking();
       return
     }
@@ -62,9 +60,10 @@
     }
   }
 
-  watchEffect(() => {
-      getParams.value = route.query.name;
-  });
+  watch(() => route.query.name, () => {
+      getDataTavel()
+    }
+  )
 
   onMounted(() => {
     if(process.client) {
@@ -87,7 +86,8 @@
               startDate: getInfobooking.value?.startDate,
               endtDate: getInfobooking.value?.endDate,
               reviews: getInfobooking.value?.reviews,
-              payment: dataPayment.value
+              payment: dataPayment.value?.payment,
+              notes: dataPayment.value?.notes
             },
             id: Math.floor(Math.random() * Date.now()),
             name: getInfoForm.value?.name,
@@ -126,6 +126,7 @@
         :show-add="false"
         :show-action="false"
         :list-booking="true"
+        :is-search="(route.query.name as string)"
       />
       <ModalForm
         :is-edit="false"
@@ -159,18 +160,11 @@
   @import '../scss/index.scss';
 
   .wrapper-modal-booking {
+    padding-top: rem(64);
     width: 100%;
-    height: calc(100% - rem(200));
-
-    &,
-    .content-forms-booking {
-      display: flex;
-      flex-direction: column;
-    }
 
     .content-forms-booking {
-      flex: 1;
-      justify-content: center;
+      padding-top: rem(64);
     }
 
     .input-search-booking {

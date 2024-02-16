@@ -12,15 +12,16 @@ export interface SingleTravel {
 }
 
 export interface Data {
-  id: string
-  name: string
-  image?: string
-  startDate: string
-  endDate: string
-  description: string
-  price: string
+  id: string;
+  name: string;
+  image?: string;
+  startDate: string;
+  endDate: string;
+  description: string;
+  price: string;
   reviews: string
   payment?: string;
+  notes?: string;
 }
 
 export interface Pending {
@@ -70,5 +71,12 @@ export interface FileUpload {
   name: string
   file: File
 }
+
+
+export interface DataThreeSteps {
+  payment: string;
+  notes: string;
+}
+ 
 
 

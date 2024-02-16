@@ -1,66 +1,60 @@
 <script setup lang="ts">
-  import type { LocationQueryValue } from 'vue-router';
   const item = ref<Data[]>([]);
   const isEdit = ref<boolean>(false);
   const getId = ref<number | null>(null);
   const route = useRoute();
-  const getParams = ref<LocationQueryValue | LocationQueryValue[]>(route.query.name);
-  
-  const formData = ref<Data>({
-        id:  '',
-        name:  '',
-        image:  '',
-        startDate:  '',
-        endDate: '',
-        description: '',
-        price: '',
-        reviews: ''
-    });
-
-  watchEffect(() => {
-    getParams.value = route.query.name;
-  });
-
+  const getIdDelete = ref<string>('');
+  const singleTravel = ref<Data>();
   const pathImage = '../public/image.jpg';
 
   const getData = async (id?: number) => {
-    const res: DataTravel = await $fetch(`http://localhost:8000/listTravel${getParams.value ?'?name_like='+ getParams.value : ''}`);
+    const res: DataTravel = await $fetch(`http://localhost:8000/listTravel${route.query.name ?'?name_like='+ route.query.name : ''}`);
      item.value = res as unknown as Data[];
   }
 
   const getDataEdit = (data: Data) => {
-    formData.value = data;
+    singleTravel.value = data;
     getId.value = data.id as unknown as number;
     isEdit.value = true;
   }
 
-  const deleteItem = async (id: number) => {   
+  const deleteItem = async (id: number) => {  
       await $fetch(`http://localhost:8000/listTravel/${id}`, {
           method: 'DELETE', 
       });
       getData();
   }
 
+  const shoModaleDelete = (id: string) => {
+    getIdDelete.value = id;
+  } 
+
   const resetFormCloseModal = () => {
     const node = getNode('form-travel');
     node?.reset();
+    getId.value = null;
     isEdit.value = false;
     getData();
   }
 
-  const submitForm = async () => {
+  watch(() => route.query.name, () => {
+      getData();
+    }
+  )
+
+  const submitForm = async (data: Data) => {
       try {
         const response: Data = await $fetch(`http://localhost:8000/listTravel${ getId.value ? '/' + getId.value : ''}`, {
           method: getId.value ? 'PUT' : 'POST',
           body: {
               id: (getId.value || String(item.value && Math.floor(Math.random() * Date.now()))) || 0,
-              name: formData.value.name.toLocaleLowerCase(),
-              image: formData.value.image || pathImage,
-              description: formData.value.description,
-              price: formData.value.price,
-              startDate: formData.value.startDate,
-              endDate: formData.value.endDate,
-              reviews: formData.value.reviews,
+              name: data.name,
+              image: data.image || pathImage,
+              description: data.description,
+              price: data.price,
+              startDate: data.startDate,
+              endDate: data.endDate,
+              reviews: data.reviews,
           }
         });
 
@@ -86,17 +80,17 @@
 <template>
   <RenderInfoPage
       label-button="Create a new travel">
-      <InputSearch @get-data="getData"/>
-      <ListTravel 
-        v-if="item?.length"
+      <InputSearch @get-data="getData"/>      
+      <ListTravel
         title="Travel list"
         :show-add="false"
         :show-action="true"
         :edit="isEdit"
-        @delete-item="deleteItem"
+        @sho-modale-delete="shoModaleDelete"
         @toggle-modal="toggleModal"
         :item="item"
-        @get-data-edit="getDataEdit"
+        @edit-travel="getDataEdit"
+        :is-search="(route.query.name as string)"
       />
       <ModalForm
         :is-edit="isEdit"
@@ -105,14 +99,17 @@
         @reset-form="resetFormCloseModal"
       >
       <FormCreateTravel
-        @get-data="getData"
         @toggle-modal="toggleModal"
         :data-lenght="item?.length || 0"
         @submit-form="submitForm"
-        :single-travel="formData"
+        :single-travel="singleTravel"
         :is-edit="isEdit"
     />
   </ModalForm>
+  <ConfirmModal
+    :id-item-delete="getIdDelete"
+    @delete-item="deleteItem"
+  />
 </RenderInfoPage>
 </template>
 

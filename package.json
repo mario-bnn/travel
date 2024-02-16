@@ -7,7 +7,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "project": "nuxt dev & npx json-server --watch travel.json --port 8000"
   },
   "dependencies": {
     "@formkit/nuxt": "^1.5.7",

@@ -45,6 +45,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        padding-bottom: rem(24);
        
         .stepper {
             display: flex;

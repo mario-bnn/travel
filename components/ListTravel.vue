@@ -1,11 +1,12 @@
 
 <script setup lang="ts">
     defineProps<{
-        item: Data[] | any;
+        item: Data[];
         showAction: boolean;
         showAdd: Boolean;
         title: string;
         listBooking?: boolean;
+        isSearch: string;
     }>();
 </script>
 
@@ -25,11 +26,15 @@
                   <th scope="col">Price</th>
                   <th  v-if="!listBooking" scope="col">Reviews</th>
                   <th v-if="listBooking" scope="col">Payment</th>
+                  <th v-if="listBooking" scope="col">Personal notes</th>
                 </tr>
               </thead>
             <tbody>
-              <template v-for="info in item">
-                <tr class="wrapper-info-row">
+              <template v-if="item.length">
+                <tr class="wrapper-info-row"
+                    v-for="info, index in item"
+                    :key="index"
+                >
                     <td class="content-image wrapper-info">
                         <img 
                             class="image-travel" 
@@ -66,6 +71,9 @@
                     <td v-if="listBooking" class="wrapper-info">
                         {{ info.payment }}
                     </td>
+                    <td v-if="listBooking" class="wrapper-info">
+                        {{ info.notes }}
+                    </td>
                     <td class="wrapper-info content-button-action">
                         <div class="btn-group" v-if="showAction">
                             <button 
@@ -81,7 +89,7 @@
                                     <button 
                                         type="button"
                                         @click="
-                                        $emit('getDataEdit', info),
+                                        $emit('editTravel', info),
                                         $emit('toggleModal')"
                                         class="btn btn-light button-action"
                                     >
@@ -91,8 +99,11 @@
                                 <li>
                                     <button
                                         type="button" 
-                                        class="btn btn-light button-action"
-                                        @click="$emit('deleteItem', info.id)"
+                                        class="btn btn-light button-action delete-button"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#delete-modal"
+                                        @click="
+                                        $emit('shoModaleDelete', info.id)"
                                     > 
                                         Delete
                                     </button>
@@ -114,69 +125,90 @@
               </template>
             </tbody>
         </table>
+        <div 
+        class="content-message-no-item"
+        :class="{'swov-message' :!item.length}">
+            <p v-if="!isSearch"
+                class="fs-3">There are no trips, try to create some</p>
+            <p v-else 
+                class="fs-3">No results for "{{ isSearch }}", try another city
+            </p>
+        </div>
     </div>
 </template>
 
 <style scoped lang="scss">
-    @import '../scss/index.scss';  
+    @import '../scss/index.scss';
+
+    .table-responsive {
+        .table {
+            border-collapse: separate; 
+            border-spacing: 0 rem(8);
+            .dropdown-toggle {
+                &::after {
+                    content: none;
+                }
+            }
     
-    .table {
-        border-collapse: separate; 
-        border-spacing: 0 rem(8);
-        .dropdown-toggle {
-            &::after {
-                content: none;
-            }
-        }
-
-        .wrapper-info {
-            padding-top: rem(4);
-            padding-bottom: rem(4);
-            border-bottom: rem(1) solid #8d8d8d;
-            &:not(.content-button-action) {
-                min-width: rem(120);
-            }
-
-
-            &.content-description {
-                min-width: rem(260);
-            }
-
-            &.content-button-action {
-                text-align: right;
-            }
-        }
-
-        .content-image {
-            width: rem(100);
-            height: rem(100);
-            padding: 0;
-            .image-travel {
-                width: 100%;
-                height: 100%;
-                border-radius: rem(16);
-                overflow: hidden;
-                object-fit: cover;
-            }
-        }
-
-        .dropdown-menu {
-            border: 0;
-            padding: 0;
-
-            .button-action {
-                width: 100%;
-                border-radius: 0;
-                text-align: left;
-            }
-        }
+            .wrapper-info {
+                padding-top: rem(4);
+                padding-bottom: rem(4);
+                border-bottom: rem(1) solid #8d8d8d;
+                &:not(.content-button-action) {
+                    min-width: rem(120);
+                }
     
-        .name-travel {
-            text-transform: capitalize;
-        }
     
-        .button-add {
-            @include font-size-line-weight(24, 24);
+                &.content-description {
+                    min-width: rem(260);
+                }
+    
+                &.content-button-action {
+                    text-align: right;
+                }
+            }
+    
+            .content-image {
+                width: rem(100);
+                height: rem(100);
+                padding: 0;
+                .image-travel {
+                    width: 100%;
+                    height: 100%;
+                    border-radius: rem(16);
+                    overflow: hidden;
+                    object-fit: cover;
+                }
+            }
+    
+            .dropdown-menu {
+                border: 0;
+                padding: 0;
+    
+                .button-action {
+                    width: 100%;
+                    border-radius: 0;
+                    text-align: left;
+                }
+            }
+        
+            .name-travel {
+                text-transform: capitalize;
+            }
+        
+            .button-add {
+                @include font-size-line-weight(24, 24);
+            }
+        }
+
+        .content-message-no-item {
+           text-align: center;
+           margin-top: rem(64);
+           display: none;
+
+           &.swov-message {
+            display: block;
+           }
         }
     }
 </style>

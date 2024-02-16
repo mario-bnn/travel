@@ -12,9 +12,6 @@
                 name: valueInputSeach.value.toLocaleLowerCase(),
             },
         });
-        setTimeout(() => {
-            emit('getData');
-        });
     }
 </script>
 
@@ -48,7 +45,6 @@
                 right: rem(12);
                 top: 0;
             }
-
         }
     }
 </style>

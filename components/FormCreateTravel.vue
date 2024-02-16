@@ -32,6 +32,27 @@
             currentDate.value = getCurrentDate.toLocaleDateString('en-us', {year: 'numeric', month: 'numeric', day: 'numeric' });
         }
     });
+
+    const convertImgeBase = (file: File[]) => {
+        if (file.length > 0) {
+            let fileToLoad = file[0];
+            const fileReader = new FileReader();
+    
+            fileReader.onload =  (fileLoadedEvent: any) => {
+                formData.value.image = fileLoadedEvent.target.result; // <--- data: base64;
+            }
+
+            fileReader.readAsDataURL(fileToLoad);
+        }
+    }
+
+    const initUpload = (files : File[]) : void  => {
+        convertImgeBase(files);
+    }
+
+    const resetValueImage = () => {
+        formData.value.image = "/image.jpg";
+    }
 </script>
 
 <template>
@@ -40,27 +61,27 @@
         type="form"
         form-class="row content-form-travel"
         :submitLabel="edit ? 'Save' : 'Create'"
-        #default="{ state: { valid } }"
-        @submit="$emit('submitForm')"
+        @submit="$emit('submitForm', formData)"
         :submit-attrs="{
             wrapperClass: 'col-12 content-button-submit',
             inputClass: 'btn btn-primary',
         }"
     >
         <div class="content-input-image row">
-            <FormKit
-                label-class="form-label"
-                outer-class="form-label col-md-6"
-                input-class="form-control"
-                type="text"
-                label="Add url for image"
-                placeholder="Enter url for image..."
-                name="image"
-                id="image"
-                validation="required"
-                ref="imgUrl"
-                v-model="formData.image"
-            />
+            <div class="content-image">
+                    <img
+                        :src="formData.image || './image.jpg'"
+                        alt="image-travel"
+                        class="img-form"
+                        id="image-render-upload"
+                    >
+                <FileDrop
+                    :inpu-value="(formData.image as string)"
+                    class="content-drop"
+                    @reset-Image="resetValueImage"
+                    @upload="initUpload"
+                />
+            </div>
         </div>
         <h5 class="message-upload-image">
            Travel information
@@ -157,7 +178,35 @@
 
         .content-input-image {
             border-bottom: rem(1) solid #b5b7b9;
-            margin: rem(40) 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: rem(32);
+
+            .content-drop {
+                position: absolute;
+                top: 0;
+                bottom: 0;
+                width: rem(300);
+                left: 50%;
+                transform: translateX(-50%);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            
+
+            .content-image {
+                height: rem(300);
+                width: rem(300);
+
+                .img-form {
+                    width: 100%;
+                    height: 100%;
+                    object-fit: contain;
+                }
+            }
     
             .formkit-outer {
                margin: rem(20) 0;

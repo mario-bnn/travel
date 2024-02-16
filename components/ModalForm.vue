@@ -42,24 +42,15 @@
         .content-form {
             position: relative;
             height: 100%;
-            padding: rem(32) 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            overflow-y: auto;
+            padding-bottom: rem(24);
         }
 
         .modal-header {
-           width: 100%;
-           position: absolute;
-           top: 0;
-           left: 0;
-           z-index: 1;
-
            .btn-close {
-            @include font-size-line-weight(24, 24);
-            padding: rem(10);
-            margin: rem(-10);
+                @include font-size-line-weight(24, 24);
+                padding: rem(10);
+                margin: rem(-10);
            }
         }
 
